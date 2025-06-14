@@ -6,7 +6,7 @@ import joblib
 so_regressor = joblib.load("strikeout_regression_model.pkl")
 so_classifier = joblib.load("strikeout_model_over6.pkl")
 bb_regressor = joblib.load("BB_regression_model.pkl")
-bb_classifier = joblib.load("BB_model_over6.pkl")
+bb_classifier = joblib.load("BB_model_over1.pkl")
 
 # === App Title ===
 st.title("⚾ Strikeout & Walk Prediction Dashboard")
