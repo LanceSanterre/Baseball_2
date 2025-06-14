@@ -3,8 +3,8 @@ import pandas as pd
 import joblib
 
 # === Load Models ===
-so_regressor = joblib.load("SO_regression_model.pkl")
-so_classifier = joblib.load("SO_model_over6.pkl")
+so_regressor = joblib.load("strikeout_regression_model.pkl")
+so_classifier = joblib.load("strikeout_model_over6.pkl")
 bb_regressor = joblib.load("BB_regression_model.pkl")
 bb_classifier = joblib.load("BB_model_over6.pkl")
 
