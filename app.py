@@ -11,8 +11,8 @@ bb_classifier = joblib.load("BB_model_over1.pkl")
 # === Load Feature Lists ===
 so_features = joblib.load("so_model_features.pkl")
 so_cls_features = joblib.load("so_model_cls_features.pkl")
-bb_features = joblib.load("bb_model_features.pkl")
-bb_cls_features = joblib.load("bb_model_cls_features.pkl")
+bb_features = joblib.load("BB_model_features.pkl")
+bb_cls_features = joblib.load("BB_model_cls_features.pkl")
 
 # === App Title ===
 st.title("⚾ Strikeout & Walk Prediction Dashboard")
