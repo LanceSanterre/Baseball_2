@@ -36,7 +36,9 @@ rolling_so = st.number_input("Rolling Strikeouts (Last 5 Games):", value=7.0)
 rolling_bb = st.number_input("Rolling Walks (Last 5 Games):", value=1.5)
 rolling_ip = st.number_input("Rolling Innings Pitched (Last 5 Games):", value=5.8)
 
-# === Prediction ===
+pitcher_code = st.text_input("👤 Pitcher Code (e.g., snellbl01)", value="snellbl01")
+pitcher_feature_name = f"pitcher_id_{pitcher_code}"
+
 if st.button("🧠 Predict All Models"):
     base_input = {
         "DR": dr,
@@ -45,26 +47,26 @@ if st.button("🧠 Predict All Models"):
         "Opp_ID": opp_id,
         "Rolling_SO_5": rolling_so,
         "Rolling_BB_5": rolling_bb,
-        "Rolling_IP_5": rolling_ip
+        "Rolling_IP_5": rolling_ip,
+        pitcher_feature_name: 1  # one-hot encode pitcher
     }
 
     input_df = pd.DataFrame([base_input])
 
-    # Reindex to match training features
+    # === Reindex all inputs with full feature lists ===
     so_input = input_df.reindex(columns=so_features, fill_value=0)
     so_cls_input = input_df.reindex(columns=so_cls_features, fill_value=0)
     bb_input = input_df.reindex(columns=bb_features, fill_value=0)
     bb_cls_input = input_df.reindex(columns=bb_cls_features, fill_value=0)
 
-    # === Model Predictions ===
+    # === Make Predictions ===
     so_pred = so_regressor.predict(so_input)[0]
     so_prob = so_classifier.predict_proba(so_cls_input)[0][1]
     bb_pred = bb_regressor.predict(bb_input)[0]
     bb_prob = bb_classifier.predict_proba(bb_cls_input)[0][1]
 
-    # === Output ===
+    # === Output Results ===
     st.header("📊 Results")
-
     col1, col2 = st.columns(2)
 
     with col1:
