@@ -8,6 +8,12 @@ so_classifier = joblib.load("strikeout_model_over6.pkl")
 bb_regressor = joblib.load("BB_regression_model.pkl")
 bb_classifier = joblib.load("BB_model_over1.pkl")
 
+# === Load Feature Lists ===
+so_features = joblib.load("so_model_features.pkl")
+so_cls_features = joblib.load("so_model_cls_features.pkl")
+bb_features = joblib.load("bb_model_features.pkl")
+bb_cls_features = joblib.load("bb_model_cls_features.pkl")
+
 # === App Title ===
 st.title("⚾ Strikeout & Walk Prediction Dashboard")
 
@@ -32,7 +38,7 @@ rolling_ip = st.number_input("Rolling Innings Pitched (Last 5 Games):", value=5.
 
 # === Prediction ===
 if st.button("🧠 Predict All Models"):
-    input_df = pd.DataFrame([{
+    base_input = {
         "DR": dr,
         "Start_Depth": start_depth,
         "Team_ID": team_id,
@@ -40,15 +46,21 @@ if st.button("🧠 Predict All Models"):
         "Rolling_SO_5": rolling_so,
         "Rolling_BB_5": rolling_bb,
         "Rolling_IP_5": rolling_ip
-    }])
+    }
 
-    # Strikeout Predictions
-    so_pred = so_regressor.predict(input_df)[0]
-    so_prob = so_classifier.predict_proba(input_df)[0][1]
+    input_df = pd.DataFrame([base_input])
 
-    # Walk Predictions
-    bb_pred = bb_regressor.predict(input_df)[0]
-    bb_prob = bb_classifier.predict_proba(input_df)[0][1]
+    # Reindex to match training features
+    so_input = input_df.reindex(columns=so_features, fill_value=0)
+    so_cls_input = input_df.reindex(columns=so_cls_features, fill_value=0)
+    bb_input = input_df.reindex(columns=bb_features, fill_value=0)
+    bb_cls_input = input_df.reindex(columns=bb_cls_features, fill_value=0)
+
+    # === Model Predictions ===
+    so_pred = so_regressor.predict(so_input)[0]
+    so_prob = so_classifier.predict_proba(so_cls_input)[0][1]
+    bb_pred = bb_regressor.predict(bb_input)[0]
+    bb_prob = bb_classifier.predict_proba(bb_cls_input)[0][1]
 
     # === Output ===
     st.header("📊 Results")
